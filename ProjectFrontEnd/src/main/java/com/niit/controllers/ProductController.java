@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.niit.dao.ProductDao;
@@ -121,6 +122,16 @@ public String addProduct(@Valid @ModelAttribute(name="product")Product product,B
 			}
 		}
 		return "redirect:/all/getallproducts";
-		
-		
-	}}
+		}
+	@RequestMapping(value="/all/searchByCategory")
+	public String searchByCategory(@RequestParam String searchCondition, Model model)
+	{
+		model.addAttribute("searchCondition",searchCondition);
+		if(searchCondition.equals("All"))
+			model.addAttribute("searchCondition","");
+		else
+			model.addAttribute("searchCondition",searchCondition);
+		model.addAttribute("productsList", productDao.getAllProducts());
+		return "listofproducts";
+	}
+	}

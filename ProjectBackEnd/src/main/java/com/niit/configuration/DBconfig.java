@@ -12,8 +12,15 @@ import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.niit.models.Authorities;
+import com.niit.models.BillingAddress;
+import com.niit.models.CartItem;
 import com.niit.models.Category;
+import com.niit.models.Customer;
+import com.niit.models.CustomerOrder;
 import com.niit.models.Product;
+import com.niit.models.ShippingAddress;
+import com.niit.models.User;
 
 @Configuration
 @EnableTransactionManagement
@@ -43,7 +50,7 @@ public class DBconfig
 		//An array of Class objects of all the entities
 		//Map all entities to relational table
 		@SuppressWarnings("rawtypes")
-		Class classes[]=new Class[]{Product.class,Category.class}; //If product class is not yet created, remove this and add it later
+		Class classes[]=new Class[]{Product.class,Category.class,User.class,Customer.class,Authorities.class,BillingAddress.class,ShippingAddress.class,CartItem.class,CustomerOrder.class}; //If product class is not yet created, remove this and add it later
 		
 		System.out.println("SessionFactory bean " + lsf);
 	    return lsf.addAnnotatedClasses(classes).buildSessionFactory();

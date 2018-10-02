@@ -3,6 +3,7 @@
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core"  prefix="c"%>
       <%@ page isELIgnored="false" %>
     <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+    <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -39,18 +40,30 @@
                 <li><a href="<c:url value='/all/getallproducts'></c:url>">Browse all Products</a>
 				<li class=dropdown><a href="" class="dropdown-toggle dropdown-collapse" data-toggle="dropdown">Select by Category<span class="caret caret-collapse"></span></a>
 					<ul class="dropdown-menu">
-					<li><a href="">Electronic gadgets</a></li>
-					<li><a href="">Clothing</a></li>
-					<li><a href="">Books</a></li>
-					<li><a href="">Shoes</a></li>
-					<li><a href="">Toys and kids</a></li>
+					<c:forEach items="${categories}" var="category" >
+					<li><a href="<c:url value='/all/searchByCategory?searchCondition=${category.categoryname}'></c:url>">${category.categoryname}</a>
+					</li>
+					</c:forEach>
+					<li><a href="<c:url value='/all/searchByCategory?searchCondition=All'></c:url>">All</a>
+					</li>
 					</ul>
 					</li>
+					<security:authorize access="hasRole('ROLE_ADMIN')">
 					<li><a href="<c:url value='/admin/getproductform'></c:url>">Add Product</a></li>
-				<li><a href="">Sign In&nbsp;&nbsp;&nbsp;</a></li>
-				<li><a href="" class="btn  btn-warning navbar-btn navbar - right"><font color="blue"><b>Register</b></font></a>
-				<li><a href="<c:url value='/aboutus'></c:url>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;About Us&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
-				 <li><a href="#" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-shopping-cart"></span><font color="blue"><b> My Cart&nbsp;&nbsp;&nbsp;</b></font></a></li>
+					</security:authorize>
+					<c:if test="${pageContext.request.userPrincipal.name==null }">
+				<li><a href="<c:url value='/login'></c:url>">Sign In&nbsp;&nbsp;&nbsp;</a></li>
+				
+				<li><a href="<c:url value='/all/registrationform'></c:url>" class="btn  btn-warning navbar-btn navbar - right"><font color="blue"><b>Register</b></font></a>
+				</c:if>
+				<li><a href="<c:url value='/aboutus'></c:url>">About Us</a></li>
+				<security:authorize access="hasRole('ROLE_USER')">
+				 <li><a href="<c:url value='/cart/getcart'></c:url>" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-shopping-cart">(${cartSize })</span><font color="blue"><b> My Cart&nbsp;&nbsp;&nbsp;</b></font></a></li>
+				</security:authorize>
+				<c:if test="${pageContext.request.userPrincipal.name!=null }">
+				<li><a href="#"> Hi ,${pageContext.request.userPrincipal.name }</a></li>
+				<li><a href="<c:url value='/j_spring_security_logout'></c:url>">Sign out</a></li>
+			    </c:if>
 				</ul>
 		</div>
 		</nav>
